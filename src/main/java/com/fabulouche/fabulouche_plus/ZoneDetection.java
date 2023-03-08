@@ -33,11 +33,11 @@ public class ZoneDetection implements Listener {
         if (!newZone.equals(currentZone)) {
             playerZones.put(player, newZone);
             if (newZone.equals("N")) {
-                player.sendTitle("§4Nord", "", 10, 20, 10);
+                player.sendTitle("§cNord", "", 10, 20, 10);
                 player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_BREAK, SoundCategory.MASTER, 1.0f,
                         1.0f);
             } else if (newZone.equals("S")) {
-                player.sendTitle("§3Sud", "", 10, 20, 10);
+                player.sendTitle("§9Sud", "", 10, 20, 10);
                 player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_BREAK, SoundCategory.MASTER, 1.0f,
                         1.0f);
             } else {

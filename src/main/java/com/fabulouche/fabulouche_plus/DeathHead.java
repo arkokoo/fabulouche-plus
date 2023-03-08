@@ -12,14 +12,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Collections;
 
 public class DeathHead implements Listener {
-    public ItemStack head;
+    public ItemStack playerHead;
 
     public DeathHead() {
-        head = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        playerHead = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) playerHead.getItemMeta();
         meta.setDisplayName("Tête de %s");
         meta.setLore(Collections.singletonList("Permet de le ressusciter"));
-        head.setItemMeta(meta);
+        playerHead.setItemMeta(meta);
     }
 
     @EventHandler
