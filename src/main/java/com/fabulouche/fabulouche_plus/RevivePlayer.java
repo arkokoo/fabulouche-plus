@@ -20,7 +20,7 @@ public class RevivePlayer implements Listener {
         final Block block = event.getBlock();
 
         // Vérifier si le bloc posé est une tête de joueur et est à la position voulue
-        if (block.getType() == Material.PLAYER_HEAD && isAtLocation(block.getLocation(), 120, 78, -41)) {
+        if (block.getType() == Material.PLAYER_HEAD && isAtLocation(block.getLocation(), 1000, 65, 0)) {
             Skull skull = (Skull) block.getState();
             final String owner = skull.getOwningPlayer().getName();
             Bukkit.getLogger().info("Une tête de joueur a été trouvée aux coordonnées 120 78 -41.");
@@ -57,7 +57,7 @@ public class RevivePlayer implements Listener {
                                                     public void run() {
                                                         // Vérifier si la tête de joueur est toujours posée
                                                         if (block.getType() == Material.PLAYER_HEAD
-                                                                && isAtLocation(block.getLocation(), 120, 78, -41)) {
+                                                                && isAtLocation(block.getLocation(), 1000, 65, 0)) {
                                                             unbanPlayer(owner); // Débanir le joueur
                                                             block.setType(Material.AIR); // Détruire la tête de joueur
 
