@@ -21,6 +21,9 @@ public class Plugin extends JavaPlugin {
 
     // Enregistrer l'écouteur d'événements RevivePlayer
     getServer().getPluginManager().registerEvents(new RevivePlayer(), this);
+
+    // Enregistrer l'écouteur d'événements ChatFormat
+    getServer().getPluginManager().registerEvents(new ChatFormat(), this);
   }
 
   @Override
