@@ -14,20 +14,27 @@ import java.util.Map;
 public class ZoneDetection implements Listener {
     public Map<Player, String> playerZones = new HashMap<>(); // Stocke la zone actuelle de chaque joueur
 
+    ChatFormat chat = new ChatFormat();
+    
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         double x = event.getTo().getX();
         double z = event.getTo().getZ();
+        String teamColor = chat.getTeam(player);
         String newZone;
 
         // Stocke la nouvelle zone dans laquelle le joueur se trouve
         if (x >= -50 && x <= 50 && z >= -50 && z <= 50) {
             newZone = "C";
+            player.setPlayerListName(" §e■ "+ teamColor + player.getName());
         } else if (z > 0) {
             newZone = "S";
+            player.setPlayerListName(" §9■ "+ teamColor + player.getName());
         } else {
             newZone = "N";
+            player.setPlayerListName(" §c■ "+ teamColor + player.getName());
+
         }
 
         String currentZone = playerZones.get(player);
@@ -41,17 +48,14 @@ public class ZoneDetection implements Listener {
                     player.sendTitle("§cNord", "", 10, 20, 10);
                     player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_BREAK, SoundCategory.MASTER, 1.0f,
                             1.0f);
-                    player.setPlayerListName(" §c■§r " + player.getName());
                 } else if (newZone.equals("S")) {
                     player.sendTitle("§9Sud", "", 10, 20, 10);
                     player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_BREAK, SoundCategory.MASTER, 1.0f,
                             1.0f);
-                    player.setPlayerListName(" §9■§r " + player.getName());
                 } else {
                     player.sendTitle("§eCentre", "", 10, 20, 10);
                     player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_HURT, SoundCategory.MASTER, 1.0f,
                             1.0f);
-                    player.setPlayerListName(" §e■§r " + player.getName());
                 }
             }
         }

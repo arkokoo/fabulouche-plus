@@ -1,6 +1,8 @@
 package com.fabulouche.fabulouche_plus;
 
 import java.util.logging.Logger;
+
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*
@@ -24,6 +26,9 @@ public class Plugin extends JavaPlugin {
 
     // Enregistrer l'écouteur d'événements ChatFormat
     getServer().getPluginManager().registerEvents(new ChatFormat(), this);
+
+    //Gestionnaire des permissions pour les jails et non whitelists
+    getServer().getPluginManager().registerEvents(new playerManager(), this);
   }
 
   @Override
