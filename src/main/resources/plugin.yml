@@ -3,3 +3,8 @@ main: com.fabulouche.fabulouche_plus.Plugin
 version: 0.0.1
 api-version: 1.15
 description: Ajoute les fonctionnalités du serveur Fabulouche
+
+commands:
+  parrain:
+    description: "Définir un joueur comme parrain d'un autre joueur"
+    usage: "/parrain <Parrain> <Filleul>"

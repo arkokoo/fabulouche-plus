@@ -1,23 +1,20 @@
 package com.fabulouche.fabulouche_plus;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class ChatFormat implements Listener {
 
     public String getTeam(Player player) {
         String color;
-        if (player.hasPermission("*")) {
+        if (player.hasPermission("fabulouche.op")) {
             color = "§5";
         } else if (player.hasPermission("fabulouche.nord")) {
             color = "§c";
-        } else if (player.hasPermission("fabulouche.sud")){
+        } else if (player.hasPermission("fabulouche.sud")) {
             color = "§9";
         } else if (player.hasPermission("fabulouche.jail")) {
             color = "§8";
@@ -34,8 +31,8 @@ public class ChatFormat implements Listener {
         String colorPrefix;
         double x = player.getLocation().getX();
         double z = player.getLocation().getZ();
-        
-        //Affiche la zone dans laquelle se trouve le joueur
+
+        // Affiche la zone dans laquelle se trouve le joueur
         if (world.getName().equals("world_nether")) {
             colorPrefix = "§4";
         } else if (world.getName().equals("world_the_end")) {

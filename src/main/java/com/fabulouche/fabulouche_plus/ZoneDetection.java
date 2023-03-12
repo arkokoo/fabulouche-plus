@@ -15,25 +15,29 @@ public class ZoneDetection implements Listener {
     public Map<Player, String> playerZones = new HashMap<>(); // Stocke la zone actuelle de chaque joueur
 
     ChatFormat chat = new ChatFormat();
-    
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         double x = event.getTo().getX();
         double z = event.getTo().getZ();
         String teamColor = chat.getTeam(player);
-        String newZone;
+        String newZone = "/";
 
         // Stocke la nouvelle zone dans laquelle le joueur se trouve
-        if (x >= -50 && x <= 50 && z >= -50 && z <= 50) {
+        if (player.getLocation().getWorld().getName().equals("world_nether")) {
+            player.setPlayerListName(" §4■ " + teamColor + player.getName());
+        } else if (player.getLocation().getWorld().getName().equals("world_the_end")) {
+            player.setPlayerListName(" §5■ " + teamColor + player.getName());
+        } else if (x >= -50 && x <= 50 && z >= -50 && z <= 50) {
             newZone = "C";
-            player.setPlayerListName(" §e■ "+ teamColor + player.getName());
+            player.setPlayerListName(" §e■ " + teamColor + player.getName());
         } else if (z > 0) {
             newZone = "S";
-            player.setPlayerListName(" §9■ "+ teamColor + player.getName());
+            player.setPlayerListName(" §9■ " + teamColor + player.getName());
         } else {
             newZone = "N";
-            player.setPlayerListName(" §c■ "+ teamColor + player.getName());
+            player.setPlayerListName(" §c■ " + teamColor + player.getName());
 
         }
 

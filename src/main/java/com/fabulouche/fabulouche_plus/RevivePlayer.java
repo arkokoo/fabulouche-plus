@@ -20,10 +20,10 @@ public class RevivePlayer implements Listener {
         final Block block = event.getBlock();
 
         // Vérifier si le bloc posé est une tête de joueur et est à la position voulue
-        if (block.getType() == Material.PLAYER_HEAD && isAtLocation(block.getLocation(), 1000, 65, 0)) {
+        if (block.getType() == Material.PLAYER_HEAD && isAtLocation(block.getLocation(), 1000, 65, 0)
+                || block.getType() == Material.PLAYER_HEAD && isAtLocation(block.getLocation(), -1000, 65, 0)) {
             Skull skull = (Skull) block.getState();
             final String owner = skull.getOwningPlayer().getName();
-            Bukkit.getLogger().info("Une tête de joueur a été trouvée aux coordonnées 120 78 -41.");
 
             // Vérifier que la tête de joueur appartient à un joueur banni
             if (isPlayerBanned(owner)) {
@@ -34,7 +34,7 @@ public class RevivePlayer implements Listener {
                     public void run() {
                         final Location location = block.getLocation();
                         // Faire apparaître les 4 éclairs
-                        location.add(-2, 1, -2);
+                        location.add(-2, 2, -2);
                         location.getWorld().strikeLightning(location);
                         new BukkitRunnable() {
                             @Override
@@ -57,7 +57,10 @@ public class RevivePlayer implements Listener {
                                                     public void run() {
                                                         // Vérifier si la tête de joueur est toujours posée
                                                         if (block.getType() == Material.PLAYER_HEAD
-                                                                && isAtLocation(block.getLocation(), 1000, 65, 0)) {
+                                                                && isAtLocation(block.getLocation(), 1000, 65, 0)
+                                                                || block.getType() == Material.PLAYER_HEAD
+                                                                        && isAtLocation(block.getLocation(), -1000, 65,
+                                                                                0)) {
                                                             unbanPlayer(owner); // Débanir le joueur
                                                             block.setType(Material.AIR); // Détruire la tête de joueur
 
@@ -66,16 +69,13 @@ public class RevivePlayer implements Listener {
                                                             Bukkit.broadcastMessage("§e" + owner
                                                                     + "§7 est revenu à la vie grâce à §e" + playerName
                                                                     + "§7 !");
-                                                            location.add(2, -1, -2);
+                                                            location.add(2, -2, -2);
                                                             location.getWorld().strikeLightning(location);
                                                             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                                                                 onlinePlayer.playSound(onlinePlayer.getLocation(),
                                                                         "minecraft:entity.allay.death",
                                                                         SoundCategory.MASTER, 10, 0);
                                                             }
-                                                        } else {
-                                                            Bukkit.getLogger().info(
-                                                                    "La tête de joueur a été retirée avant la fin de la résurrection.");
                                                         }
                                                     }
                                                 }.runTaskLater(JavaPlugin.getPlugin(Plugin.class), 50L); // Attendre
@@ -89,8 +89,6 @@ public class RevivePlayer implements Listener {
                     }
                 }.runTaskLater(JavaPlugin.getPlugin(Plugin.class), 100L); // Attendre 5 secondes (100 ticks)
 
-            } else {
-                Bukkit.getLogger().info("La tête de joueur trouvée n'appartient pas à un joueur banni.");
             }
         }
     }
