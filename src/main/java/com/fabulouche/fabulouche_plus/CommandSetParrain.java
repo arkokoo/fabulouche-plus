@@ -30,12 +30,12 @@ public class CommandSetParrain implements CommandExecutor {
         }
         String pseudoParrain = args[0];
         String pseudoFilleul = args[1];
-        
+
         String player1Team = getTeamFromPseudo(pseudoParrain);
         String player2Team = getTeamFromPseudo(pseudoFilleul);
 
-        if (player1Team == null || player1Team == "OP" || player2Team == "OP"
-                || player1Team == "JAIL" || player2Team == "JAIL") {
+        if (player1Team == null || "OP".equals(player1Team) || "OP".equals(player2Team)
+                || "JAIL".equals(player1Team) || "JAIL".equals(player2Team)) {
             sender.sendMessage("Le parrainage ne peut pas avoir lieu.");
             return true;
         }
@@ -49,7 +49,7 @@ public class CommandSetParrain implements CommandExecutor {
             sender.sendMessage("Le joueur " + pseudoFilleul + " n'existe pas dans la base de données.");
             return true;
         }
-        if (player2Team == "SUD" || player2Team == "NORD") {
+        if ("SUD".equals(player2Team) || "NORD".equals(player2Team)) {
             sender.sendMessage("Le joueur " + pseudoFilleul + " est déjà dans une équipe.");
             return true;
         }
@@ -63,12 +63,12 @@ public class CommandSetParrain implements CommandExecutor {
             if (rowsAffected == 1) {
                 sender.sendMessage(
                         "Le parrainage entre " + pseudoParrain + " et " + pseudoFilleul + " a été enregistré.");
-                if (player1Team == "NORD") {
+                if ("NORD".equals(player1Team)) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
                             "lp user " + pseudoFilleul + " group set nord");
                     Bukkit.broadcastMessage(
                             "§c" + pseudoFilleul + "§e vient de se faire parrainer par §c" + pseudoParrain + "§e. ");
-                } else if (player1Team == "SUD") {
+                } else if ("SUD".equals(player1Team)) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
                             "lp user " + pseudoFilleul + " group set sud");
                     Bukkit.broadcastMessage(
@@ -100,7 +100,7 @@ public class CommandSetParrain implements CommandExecutor {
         return id;
     }
 
-        private String getTeamFromPseudo(String pseudo) {
+    private String getTeamFromPseudo(String pseudo) {
         String team = null;
         try {
             PreparedStatement stmt = conn.prepareStatement("SELECT team FROM utilisateurs WHERE pseudo = ?");

@@ -1,5 +1,6 @@
 package com.fabulouche.fabulouche_plus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,5 +49,33 @@ public class ChatFormat implements Listener {
         // Utiliser la zone pour formater le message de chat
         String message = colorPrefix + "■ " + getTeam(player) + player.getDisplayName() + " §r» " + event.getMessage();
         event.setFormat(message);
+
+        // Vérifie si le message commence par "!"
+        if (event.getMessage().startsWith("!")) {
+            String teamPermission = "";
+
+            // Vérifie si le joueur appartient à l'équipe sud
+            if (player.hasPermission("fabulouche.sud")) {
+                teamPermission = "fabulouche.sud";
+            }
+            // Vérifie si le joueur appartient à l'équipe nord
+            else if (player.hasPermission("fabulouche.nord")) {
+                teamPermission = "fabulouche.nord";
+            }
+            // Si le joueur n'appartient à aucune équipe, annule l'événement
+            else {
+                event.setCancelled(true);
+                player.sendMessage("Vous n'êtes dans aucune équipe !");
+                return;
+            }
+
+            // Envoie le message uniquement aux joueurs ayant la permission correspondante
+            message = "§d[TEAM]§r " + colorPrefix + "■ " + getTeam(player) + player.getDisplayName() + " §r» "
+                    + event.getMessage().substring(1);
+            Bukkit.getServer().broadcast(message, teamPermission);
+
+            // Annule l'événement pour éviter que le message soit envoyé dans le chat global
+            event.setCancelled(true);
+        }
     }
 }
