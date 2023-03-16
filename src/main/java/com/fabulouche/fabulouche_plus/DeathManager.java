@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -31,7 +32,8 @@ public class DeathManager implements Listener {
         Player player = event.getEntity();
         double x = player.getLocation().getX();
         double z = player.getLocation().getZ();
-        if (!(x >= -50 && x <= 50 && z >= -50 && z <= 50)) {
+        World world = player.getLocation().getWorld();
+        if (!(x >= -50 && x <= 50 && z >= -50 && z <= 50) || !(world.getName().equals("world"))) {
             long playTime = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
             if (playTime >= 216000) {
                 ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1);

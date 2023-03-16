@@ -35,8 +35,8 @@ public class CommandSetParrain implements CommandExecutor {
         Player player2 = Bukkit.getServer().getPlayer(pseudoFilleul);
 
         if (player1.hasPermission("fabulouche.op") || player2.hasPermission("fabulouche.op")
-                || player2.hasPermission("fabulouche.jail")) {
-            sender.sendMessage("Aucun joueur ne doit être un administrateur.");
+                || player1.hasPermission("fabulouche.jail") || player2.hasPermission("fabulouche.jail")) {
+            sender.sendMessage("Le parrainage ne peut pas avoir lieu.");
             return true;
         }
         int idParrain = getIdFromPseudo(pseudoParrain);
