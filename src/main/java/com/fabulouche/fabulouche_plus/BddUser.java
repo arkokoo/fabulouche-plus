@@ -38,9 +38,23 @@ public class BddUser {
 
     public void updatePlayerName(Player player) {
         try {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE utilisateurs SET pseudo = ? WHERE uuid = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE utilisateurs SET pseudo = ?, team= ? WHERE uuid = ?");
             stmt.setString(1, player.getName());
-            stmt.setString(2, player.getUniqueId().toString());
+            String team = null;
+            if (player.hasPermission("fabulouche.op")) {
+                team = "OP";
+            }
+            else if (player.hasPermission("fabulouche.jail")) {
+                team = "JAIL";
+            }
+            else if (player.hasPermission("fabulouche.sud")) {
+                team = "SUD";
+            }
+            else if (player.hasPermission("fabulouche.nord")) {
+                team = "NORD";
+            }
+            stmt.setString(2, team);
+            stmt.setString(3, player.getUniqueId().toString());
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {

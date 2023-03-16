@@ -30,12 +30,12 @@ public class CommandSetParrain implements CommandExecutor {
         }
         String pseudoParrain = args[0];
         String pseudoFilleul = args[1];
+        
+        String player1Team = getTeamFromPseudo(pseudoParrain);
+        String player2Team = getTeamFromPseudo(pseudoFilleul);
 
-        Player player1 = Bukkit.getServer().getPlayer(pseudoParrain);
-        Player player2 = Bukkit.getServer().getPlayer(pseudoFilleul);
-
-        if (player1.hasPermission("fabulouche.op") || player2.hasPermission("fabulouche.op")
-                || player1.hasPermission("fabulouche.jail") || player2.hasPermission("fabulouche.jail")) {
+        if (player1Team == null || player1Team == "OP" || player2Team == "OP"
+                || player1Team == "JAIL" || player2Team == "JAIL") {
             sender.sendMessage("Le parrainage ne peut pas avoir lieu.");
             return true;
         }
@@ -49,7 +49,7 @@ public class CommandSetParrain implements CommandExecutor {
             sender.sendMessage("Le joueur " + pseudoFilleul + " n'existe pas dans la base de données.");
             return true;
         }
-        if (player2.hasPermission("fabulouche.sud") || player2.hasPermission("fabulouche.nord")) {
+        if (player2Team == "SUD" || player2Team == "NORD") {
             sender.sendMessage("Le joueur " + pseudoFilleul + " est déjà dans une équipe.");
             return true;
         }
@@ -63,12 +63,12 @@ public class CommandSetParrain implements CommandExecutor {
             if (rowsAffected == 1) {
                 sender.sendMessage(
                         "Le parrainage entre " + pseudoParrain + " et " + pseudoFilleul + " a été enregistré.");
-                if (player1.hasPermission("fabulouche.nord")) {
+                if (player1Team == "NORD") {
                     Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
                             "lp user " + pseudoFilleul + " group set nord");
                     Bukkit.broadcastMessage(
                             "§c" + pseudoFilleul + "§e vient de se faire parrainer par §c" + pseudoParrain + "§e. ");
-                } else if (player1.hasPermission("fabulouche.sud")) {
+                } else if (player1Team == "SUD") {
                     Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
                             "lp user " + pseudoFilleul + " group set sud");
                     Bukkit.broadcastMessage(
@@ -98,5 +98,21 @@ public class CommandSetParrain implements CommandExecutor {
             e.printStackTrace();
         }
         return id;
+    }
+
+        private String getTeamFromPseudo(String pseudo) {
+        String team = null;
+        try {
+            PreparedStatement stmt = conn.prepareStatement("SELECT team FROM utilisateurs WHERE pseudo = ?");
+            stmt.setString(1, pseudo);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                team = rs.getString(1);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return team;
     }
 }
