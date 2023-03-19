@@ -37,8 +37,11 @@ public class Plugin extends JavaPlugin implements Listener {
     // Enregistrer l'écouteur d'événements CancelBreeding
     getServer().getPluginManager().registerEvents(new CancelBreeding(), this);
 
+    // Enregistrer l'écouteur d'événements PlayerCompass
+    getServer().getPluginManager().registerEvents(new PlayerCompass(), this);
+
     try {
-      MySQLConnect db = new MySQLConnect("minecraft205.omgserv.com", "minecraft_398320", "c4cHn4kCXT3aFm!C",
+      MySQLConnect db = new MySQLConnect("minecraft3175.omgserv.com", "minecraft_398320", "c4cHn4kCXT3aFm!C",
           "minecraft_398320");
       conn = db.getConnection();
       bddUser = new BddUser(conn);

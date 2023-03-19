@@ -47,7 +47,8 @@ public class ChatFormat implements Listener {
         }
 
         // Utiliser la zone pour formater le message de chat
-        String message = colorPrefix + "■ " + getTeam(player) + player.getDisplayName() + " §r» " + event.getMessage();
+        String message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), player.getDisplayName(),
+                event.getMessage().replaceAll("%", "%%"));
         event.setFormat(message);
 
         // Vérifie si le message commence par "!"
@@ -70,8 +71,10 @@ public class ChatFormat implements Listener {
             }
 
             // Envoie le message uniquement aux joueurs ayant la permission correspondante
-            message = "§d[TEAM]§r " + colorPrefix + "■ " + getTeam(player) + player.getDisplayName() + " §r» "
-                    + event.getMessage().substring(1);
+            message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), player.getDisplayName(),
+                    event.getMessage().replaceFirst("!", ""));
+            String teamPrefix = "§d[TEAM]§r";
+            message = String.format("%s %s", teamPrefix, message);
             Bukkit.getServer().broadcast(message, teamPermission);
 
             // Annule l'événement pour éviter que le message soit envoyé dans le chat global
