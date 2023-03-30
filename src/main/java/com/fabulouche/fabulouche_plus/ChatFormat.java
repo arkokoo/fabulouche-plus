@@ -45,9 +45,13 @@ public class ChatFormat implements Listener {
         } else {
             colorPrefix = "§c";
         }
+        String playerName = player.getDisplayName();
+        if (playerName.contains("YoCJu") || playerName.contains("YoCVivoy")) {
+            playerName = playerName + "§6 ⭐";
+        }
 
         // Utiliser la zone pour formater le message de chat
-        String message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), player.getDisplayName(),
+        String message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), playerName,
                 event.getMessage().replaceAll("%", "%%"));
         event.setFormat(message);
 
@@ -71,7 +75,7 @@ public class ChatFormat implements Listener {
             }
 
             // Envoie le message uniquement aux joueurs ayant la permission correspondante
-            message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), player.getDisplayName(),
+            message = String.format("%s■ %s%s §r» %s", colorPrefix, getTeam(player), playerName,
                     event.getMessage().replaceFirst("!", ""));
             String teamPrefix = "§d[TEAM]§r";
             message = String.format("%s %s", teamPrefix, message);

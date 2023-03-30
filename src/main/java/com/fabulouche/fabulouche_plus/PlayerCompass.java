@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,17 +41,37 @@ public class PlayerCompass implements Listener {
             BukkitRunnable usingLoop = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (player.getExp() != 0) {
-                        lore.set(0, "§aenabled");
-                        updateLore(event, lore);
-                        // Retire 1 d'xp par tick
-                        player.giveExp(-1);
-                        // Change l'aiguille de la boussole pour pointer vers le joueur ciblé
-                        player.setCompassTarget(compassPlayers.get(player).getLocation());
+                    if (player.getLocation().getWorld().getName().equals("world")) {
+                        if (player.getWorld() != compassPlayers.get(player).getWorld()) {
+                            player.sendMessage("§7Le joueur ciblé est dans un autre monde.");
+                            player.setCompassTarget(Bukkit.getWorld("world").getSpawnLocation());
+                            lore.set(0, "§cdisabled");
+                            itemMeta.setLore(lore); // Met à jour la lore de l'ItemMeta
+                            item.setItemMeta(itemMeta); // Met à jour l'item avec le nouvel ItemMeta
+                            cancel(); // arrête la boucle lorsque le joueur n'a plus d'XP
+
+                        } else if (player.getTotalExperience() != 0) {
+                            lore.set(0, "§aenabled");
+                            itemMeta.setLore(lore); // Met à jour la lore de l'ItemMeta
+                            item.setItemMeta(itemMeta); // Met à jour l'item avec le nouvel ItemMeta
+                            // Retire 1 d'xp par tick
+                            player.giveExp(-5);
+                            // Change l'aiguille de la boussole pour pointer vers le joueur ciblé
+                            player.setCompassTarget(compassPlayers.get(player).getLocation());
+                        } else {
+                            player.sendMessage("§7Vous n'avez plus assez d'expérience.");
+                            player.setCompassTarget(Bukkit.getWorld("world").getSpawnLocation());
+                            lore.set(0, "§cdisabled");
+                            itemMeta.setLore(lore); // Met à jour la lore de l'ItemMeta
+                            item.setItemMeta(itemMeta); // Met à jour l'item avec le nouvel ItemMeta
+                            cancel(); // arrête la boucle lorsque le joueur n'a plus d'XP
+                        }
                     } else {
+                        player.sendMessage("§7Vous n'êtes pas dans l'Overworld.");
                         player.setCompassTarget(Bukkit.getWorld("world").getSpawnLocation());
                         lore.set(0, "§cdisabled");
-                        updateLore(event, lore);
+                        itemMeta.setLore(lore); // Met à jour la lore de l'ItemMeta
+                        item.setItemMeta(itemMeta); // Met à jour l'item avec le nouvel ItemMeta
                         cancel(); // arrête la boucle lorsque le joueur n'a plus d'XP
                     }
                 }
@@ -60,22 +81,19 @@ public class PlayerCompass implements Listener {
             // dans l'air
             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                 if (compassPlayers.get(player) != null) {
-                    if (player.getTotalExperience() == 0) {
-                        // Informe le joueur du problème
-                        player.sendMessage("§7Vous n'avez plus d'xp.");
-                    }
                     if (usingLoops.containsKey(player)) {
                         // Si une boucle est déjà en cours d'exécution, on ne fait rien
                         player.setCompassTarget(Bukkit.getWorld("world").getSpawnLocation());
                         lore.set(0, "§cdisabled");
-                        updateLore(event, lore);
+                        itemMeta.setLore(lore); // Met à jour la lore de l'ItemMeta
+                        item.setItemMeta(itemMeta); // Met à jour l'item avec le nouvel ItemMeta
                         usingLoops.get(player).cancel();
                         usingLoops.remove(player);
                     } else {
                         usingLoops.put(player, usingLoop);
-                        usingLoop.runTaskTimer(plugin, 0L, 1L); // exécute la tâche toutes les 1
-                        // tick (20
-                        // fois par seconde)
+                        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f);
+                        usingLoop.runTaskTimer(plugin, 0L, 5L); // exécute la tâche toutes les 1 tick
+                        // (20 fois par seconde)
                     }
                 } else {
                     player.sendMessage("§7Aucun joueur n'est sélectionné.");
@@ -89,16 +107,15 @@ public class PlayerCompass implements Listener {
                 if (players.isEmpty()) {
                     // Informe le joueur du problème
                     player.sendMessage("§7Vous êtes le seul joueur présent sur le serveur.");
+                } else {
+                    if (player.getInventory().contains(Material.AMETHYST_SHARD)) {
+                        player.getInventory().removeItem(new ItemStack(Material.AMETHYST_SHARD, 1));
+                        compassPlayers.put(player, players.get(new Random().nextInt(players.size())));
+                        player.sendMessage(
+                                "§7Vous avez sélectionné " + compassPlayers.get(player).getName() + "§7 comme cible.");
+                    }
                 }
-                compassPlayers.put(player, players.get(new Random().nextInt(players.size())));
-                player.sendMessage(
-                        "§7Vous avez sélectionné " + compassPlayers.get(player).getName() + "§7 comme cible.");
             }
         }
-    }
-
-    public void updateLore(PlayerInteractEvent e, List<String> lore) {
-        e.getItem().getItemMeta().setLore(lore); // enregistrer la nouvelle lore
-        e.getItem().setItemMeta(e.getItem().getItemMeta()); // mettre à jour l'item avec le nouveau ItemMeta
     }
 }
