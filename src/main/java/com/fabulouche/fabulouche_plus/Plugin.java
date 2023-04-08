@@ -41,7 +41,7 @@ public class Plugin extends JavaPlugin implements Listener {
     getServer().getPluginManager().registerEvents(new PlayerCompass(), this);
 
     try {
-      MySQLConnect db = new MySQLConnect("minecraft3175.omgserv.com", "minecraft_398320", "c4cHn4kCXT3aFm!C",
+      MySQLConnect db = new MySQLConnect("minecraft3738.omgserv.com", "minecraft_398320", "c4cHn4kCXT3aFm!C",
           "minecraft_398320");
       conn = db.getConnection();
       bddUser = new BddUser(conn);

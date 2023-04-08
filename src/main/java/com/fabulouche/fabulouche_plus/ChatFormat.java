@@ -59,6 +59,11 @@ public class ChatFormat implements Listener {
         if (event.getMessage().startsWith("!")) {
             String teamPermission = "";
 
+            if (player.hasPermission("fabulouche.sud") && player.hasPermission("fabulouche.nord")) {
+                event.setCancelled(true);
+                player.sendMessage("Vous êtes OP, vous n'avez pas de chat de team !");
+                return;
+            }
             // Vérifie si le joueur appartient à l'équipe sud
             if (player.hasPermission("fabulouche.sud")) {
                 teamPermission = "fabulouche.sud";
